@@ -1,19 +1,28 @@
 <!DOCTYPE html>
- <?php
-$SSID="SSID";
-$password="SSIDpassword";        
-               
-
+ 
+ 
+<?php
+            /* database connection*/
+            $db_con =  new mysqli('localhost', 'root', '', 'r_arm_complete')
+                or die("\nUnable tp connect to database");
+           
+      
+            
            
 if (isset($_POST["signin"])) {
-    $SSIDValue = $_POST['e'];
+    $EmailValue = $_POST['u'];
     $PasswordlValue = $_POST['p'];
-    if($SSIDValue == $SSID & $PasswordlValue == $password){
+
+    $sql = "SELECT * FROM `users` WHERE `email` = '$EmailValue' and `password`='$PasswordlValue'";
+    $result = mysqli_query($db_con,$sql);
+    $row = mysqli_fetch_array($result, MYSQLI_BOTH);
+
+    if($row != 0){
         header("Location: Control_panel.php");
         exit();
     }
     else{
-   echo '<script>alert("SSID or Password is invalid please try again")</script>' ;}}
+   echo '<script>alert("Email or Password is invalid please try again")</script>' ;}}
    if (isset($_POST["signup"])) {
     header("Location: signup.php");
     exit();
@@ -114,7 +123,7 @@ if (isset($_POST["signin"])) {
      <h1>Welcome</h1>
     <form  method="post">
        
-        <input type="text" name="e" placeholder="SSID" required="required" />
+        <input type="text" name="u" placeholder="Email" required="required" />
         <input type="password" name="p" placeholder="Password" required="required" /><br><br>
        
         <button type="submit" class="btn btn-primary btn-block btn-large" name="signin">Sign in</button><br>
